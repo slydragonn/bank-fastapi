@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.env
+*.venv
+.env
+venv/
+ENV/
+env/
+instance/
+.mypy_cache/
+.dmypy.json
+.pytest_cache/
+.coverage
+.cache
+*.sqlite3
+
+# VSCode
+.vscode/
+
+# MacOS / Linux
+.DS_Store
+.idea/
+*.swp
+
+# Docker
+*.log
+docker-compose.override.yml
+
+# Test
+htmlcov/
+coverage.xml
+*.cover
+
+# Others
+dist/
+build/
+*.egg-info/

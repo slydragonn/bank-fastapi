@@ -1,0 +1,34 @@
+# Git
+.git
+.gitignore
+
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+.pytest_cache/
+.mypy_cache/
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Entornos virtuales
+venv/
+env/
+.venv
+*.env
+
+# IDEs / editores
+.vscode/
+.idea/
+*.swp
+
+# Logs / Tests
+*.log
+coverage.xml
+htmlcov/
+*.cover
