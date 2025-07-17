@@ -103,3 +103,16 @@ class AccountService:
               status_code=status.HTTP_400_BAD_REQUEST,
               detail=str(e)
           )
+      
+  def delete_account(self, account_id: str):
+      """
+      Elimina la cuenta bancaria
+
+      Args:
+        account_id: id de la cuenta a consultar
+      """
+      try:
+          self.repo.delete(account_id)
+      except Exception as e:
+          print(f"Error eliminando la cuenta: {str(e)}")
+          raise

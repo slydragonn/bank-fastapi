@@ -130,3 +130,11 @@ async def update_balance(
     - Los importes negativos disminuyen el saldo
    """
    return service.update_account_balance(account_id, adjustment.amount)
+
+
+@router.delete("/{account_id}", status_code=status.HTTP_204_NO_CONTENT, tags=["Accounts"])
+async def delete_account(account_id: str, service: AccountService = Depends(get_service)):
+   """
+    Elimina una cuenta de banco.
+   """
+   return service.delete_account(account_id)

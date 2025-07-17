@@ -103,3 +103,16 @@ class AccountRepository:
       except PyMongoError as e:
           print(f"Error al actualizar balance en la base de datos: {str(e)}")
           raise ValueError("ID de cuenta u operación de actualización no válidas")
+      
+  def delete(self, account_id: str):
+      """
+      Elimina una cuenta por id
+
+      Args:
+        account_id: id de la cuenta de banco
+      """
+      try:
+          self.collection.delete_one({"_id": ObjectId(account_id)})
+      except PyMongoError as e:
+          print(f"Error al eliminar cuenta: {str(e)}")
+          raise
