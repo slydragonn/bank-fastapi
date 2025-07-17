@@ -1,6 +1,5 @@
 from pymongo.errors import PyMongoError
 from models.account import AccountCreate, AccountOut
-from datetime import datetime
 
 class AccountRepository:
   def __init__(self, db):
@@ -25,7 +24,6 @@ class AccountRepository:
             return AccountOut(
                 id=str(result.inserted_id),
                 name=account_dict["name"],
-                email=account_dict["email"],
                 balance=account_dict["balance"],
                 created_at=account_dict.get("created_at")
             )
@@ -39,7 +37,6 @@ class AccountRepository:
         return AccountOut(
             id=str(account_dict["_id"]),
             name=account_dict["name"],
-            email=account_dict["email"],
             balance=account_dict["balance"],
             created_at=account_dict.get("created_at")
         )

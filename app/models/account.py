@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import datetime
 
@@ -8,11 +8,9 @@ class AccountCreate(BaseModel):
     
     Attributes:
       name: Nombre completo del titular de la cuenta (2-100 caracteres)
-      email: Dirección de correo electrónico válida para la cuenta
       balance: Saldo inicial de la cuenta (por defecto 0 si no se indica).
     """
     name: str = Field(..., min_length=2, max_length=100, example="Juan Pérez")
-    email: EmailStr = Field(..., example="juan@example.com")
     balance: Optional[float] = Field(
         default=0.0,
         ge=0,
@@ -24,7 +22,6 @@ class AccountCreate(BaseModel):
         schema_extra = {
             "example": {
                 "name": "María García",
-                "email": "maria.garcia@example.com",
                 "balance": 500.75
             }
         }
@@ -36,13 +33,11 @@ class AccountOut(BaseModel):
     Attributes:
       id: Identificador único de la cuenta
       name: Nombre del titular de la cuenta
-      email: Dirección de correo electrónico registrada
       balance: Saldo actual de la cuenta
       created_at: Fecha de creación de la cuenta
     """
     id: str = Field(..., example="507f1f77bcf86cd799439011")
     name: str
-    email: EmailStr
     balance: float
     created_at: datetime = Field(default_factory=datetime.now)
 

@@ -38,7 +38,6 @@ async def create_account(
 
     ## Request Body
     - **name**: str (required) - Nombre completo del titular de la cuenta
-    - **email**: EmailStr (required) - Dirección de correo electrónico válida para la cuenta
     - **balance**: float (optional, default=0) - Saldo inicial de la cuenta
 
     ## Response
@@ -48,7 +47,6 @@ async def create_account(
     ```json
     {
         "name": "Juan Pérez",
-        "email": "juan.perez@example.com",
         "balance": 10000
     }
     ```
@@ -75,7 +73,6 @@ async def get_all_accounts(service: AccountService = Depends(get_service)) -> li
         {
             "id": "68795f6c6651bb3bbb6719ab",
             "name": "Juan Pérez",
-            "email": "juan@example.com",
             "balance": 0,
             "created_at": "2025-07-17T20:39:08.439000"
         }
