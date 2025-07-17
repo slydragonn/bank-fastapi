@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status
 from core.database import get_database
-from models.account import AccountCreate, AccountOutId, AccountOut
+from models.account import AccountCreate, AccountOutId, AccountOut, BalanceAdjustment, BalanceOut
 from repositories.account_repository import AccountRepository
 from services.account_service import AccountService
 
@@ -84,7 +84,7 @@ async def get_all_accounts(service: AccountService = Depends(get_service)) -> li
    return accounts_list
 
 @router.get("/{account_id}", response_model=AccountOut, tags=["Accounts"])
-async def get_account(account_id, service: AccountService = Depends(get_service)) -> AccountOut:
+async def get_account(account_id: str, service: AccountService = Depends(get_service)) -> AccountOut:
    """
     Devuelve una cuenta de banco.
 
@@ -100,3 +100,33 @@ async def get_account(account_id, service: AccountService = Depends(get_service)
    account = service.get_account_by_id(account_id)
 
    return account
+
+
+@router.patch(
+   "/{account_id}",
+   response_model=BalanceOut,
+   tags=["Accounts"],
+   responses={
+        200: {"description": "Balance adjusted successfully"},
+        404: {
+            "description": "Account not found",
+            "content": {
+                "application/json": {
+                    "example": {"detail": "Account not found"}
+                }
+            }
+        }
+    }
+)
+async def update_balance(
+   account_id: str,
+   adjustment: BalanceAdjustment,
+   service: AccountService = Depends(get_service)
+) -> BalanceOut:
+   """
+   Ajusta el saldo de la cuenta con el monto especificado.
+    
+    - Los importes positivos aumentan el saldo
+    - Los importes negativos disminuyen el saldo
+   """
+   return service.update_account_balance(account_id, adjustment.amount)

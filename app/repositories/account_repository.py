@@ -1,6 +1,8 @@
 from pymongo.errors import PyMongoError
+from pymongo import ReturnDocument
 from models.account import AccountCreate, AccountOut
 from bson import ObjectId
+from typing import Optional
 
 class AccountRepository:
   def __init__(self, db):
@@ -76,3 +78,28 @@ class AccountRepository:
           print(f"Error al consultar la cuenta en la base de datos: {str(e)}")
           raise
       
+  def update_balance(self, account_id: str, amount: float) -> Optional[AccountOut]:
+      """
+        Actualiza el saldo de la cuenta por un monto relativo.
+        
+        Args:
+            account_id: El ID de la cuenta a actualizar
+            amount: Monto a añadir (positivo o negativo)
+                        
+        Returns:
+            Cuenta actualizada o None si no se encuentra
+            
+        Raises:
+            ValueError: Si el formato del ID de cuenta no es válido
+      """
+      try:
+          updated_account = self.collection.find_one_and_update(
+              {"_id": ObjectId(account_id)},
+              {"$set": {"balance": amount}},
+              return_document=ReturnDocument.AFTER
+          )
+
+          return self._map_to_account_out(updated_account) if updated_account else None
+      except PyMongoError as e:
+          print(f"Error al actualizar balance en la base de datos: {str(e)}")
+          raise ValueError("ID de cuenta u operación de actualización no válidas")

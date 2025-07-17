@@ -1,5 +1,6 @@
 from models.account import AccountCreate, AccountOut
 from datetime import datetime
+from fastapi import HTTPException, status
 
 class AccountService:
   def __init__(self, repository):
@@ -66,3 +67,39 @@ class AccountService:
       except Exception as e:
           print(f"Error al obtener la cuenta: {str(e)}")
           raise
+      
+  def update_account_balance(self, account_id: str, amount: float) -> AccountOut:
+      """
+      Actualiza el saldo de la cuenta por un monto relativo.
+        
+      Args:
+        account_id: ID de la cuenta a actualizar
+        amount: Monto a ajustar (positivo o negativo).
+            
+      Returns:
+        Datos de la cuenta actualizados
+      """
+      try:
+          current_account = self.repo.get_one_by_id(account_id)
+          if not current_account:
+              raise HTTPException(
+                  status_code=status.HTTP_404_NOT_FOUND,
+                  detail="Cuenta no encontrada"
+              )
+          
+          # Actualizar balance de la cuenta
+          updated_balance = current_account.balance + amount
+          updated_account = self.repo.update_balance(account_id, updated_balance)
+          if not updated_account:
+              raise HTTPException(
+                  status_code=status.HTTP_404_NOT_FOUND,
+                  detail="Cuenta no encontrada despues de actualizarse"
+              )
+          
+          return updated_account
+      
+      except ValueError as e:
+          raise HTTPException(
+              status_code=status.HTTP_400_BAD_REQUEST,
+              detail=str(e)
+          )
