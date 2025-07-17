@@ -1,5 +1,6 @@
 from pymongo.errors import PyMongoError
 from models.account import AccountCreate, AccountOut
+from bson import ObjectId
 
 class AccountRepository:
   def __init__(self, db):
@@ -54,6 +55,24 @@ class AccountRepository:
 
             return [self._map_to_account_out(acc) for acc in accounts]
         except PyMongoError as e:
-            print(f"Error al obtener cuentas: {str(e)}")
+            print(f"Error al consultar cuentas en la base de datos: {str(e)}")
             raise
+
+  def get_one_by_id(self, account_id: str) -> AccountOut:
+      """
+      Obtiene los datos de una cuenta por id
+
+      Args:
+        account_id: id de la cuenta de banco
+
+      Returns:
+        AccountOut: Todos los detalles de la cuenta 
+      """
+      try:
+          account = self.collection.find_one({"_id": ObjectId(account_id)})
+
+          return self._map_to_account_out(account)
+      except PyMongoError as e:
+          print(f"Error al consultar la cuenta en la base de datos: {str(e)}")
+          raise
       

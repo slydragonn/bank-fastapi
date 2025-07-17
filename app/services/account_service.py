@@ -49,3 +49,20 @@ class AccountService:
       except Exception as e:
           print(f"Error al obtener cuentas: {str(e)}")
           raise
+      
+  def get_account_by_id(self, account_id: str) -> AccountOut:
+      """
+      Devuelve los detalles de la cuenta bancaria
+
+      Args:
+        account_id: id de la cuenta a consultar
+      
+      Returns:
+        AccountOut: Todos de los detalles de la cuenta
+      """
+
+      try:
+          return self.repo.get_one_by_id(account_id)
+      except Exception as e:
+          print(f"Error al obtener la cuenta: {str(e)}")
+          raise

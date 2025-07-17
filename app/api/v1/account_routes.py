@@ -82,3 +82,21 @@ async def get_all_accounts(service: AccountService = Depends(get_service)) -> li
    accounts_list = service.get_all_accounts()
 
    return accounts_list
+
+@router.get("/{account_id}", response_model=AccountOut, tags=["Accounts"])
+async def get_account(account_id, service: AccountService = Depends(get_service)) -> AccountOut:
+   """
+    Devuelve una cuenta de banco.
+
+    ## Ejemplo de respuesta
+    ```json
+    {
+        "id": "68795f6c6651bb3bbb6719ab",
+        "name": "Juan Pérez",
+        "balance": 0,
+        "created_at": "2025-07-17T20:39:08.439000"
+    }
+    """
+   account = service.get_account_by_id(account_id)
+
+   return account
