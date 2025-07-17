@@ -36,3 +36,16 @@ class AccountService:
         except Exception as e:
             print(f"Error al crear cuenta: {str(e)}")
             raise
+
+  def get_all_accounts(self) -> list[AccountOut]:
+      """
+      Lista todas las cuentas de banco
+
+      Returns:
+        Lista de cuentas
+      """
+      try:
+          return self.repo.get_all()
+      except Exception as e:
+          print(f"Error al obtener cuentas: {str(e)}")
+          raise

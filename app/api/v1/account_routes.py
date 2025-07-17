@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status
 from core.database import get_database
-from models.account import AccountCreate, AccountOutId
+from models.account import AccountCreate, AccountOutId, AccountOut
 from repositories.account_repository import AccountRepository
 from services.account_service import AccountService
 
@@ -24,26 +24,6 @@ def get_service():
             "content": {
                 "application/json": {
                     "example": {"id": "507f1f77bcf86cd799439011"}
-                }
-            }
-        },
-        422: {
-            "description": "Validation Error",
-            "content": {
-                "application/json": {
-                    "example": {
-                        "detail": [
-                            {
-                                "type": "greater_than_equal",
-                                "loc": ["body", "balance"],
-                                "msg": "Input should be greater than or equal to 0",
-                                "input": -5,
-                                "ctx": {
-                                    "ge": 0
-                                }
-                            }
-                        ]
-                    }
                 }
             }
         }
@@ -82,3 +62,26 @@ async def create_account(
 
     data = service.create_account(account).model_dump()
     return {"id": str(data["id"])}
+
+
+@router.get("/", response_model=list[AccountOut], tags=["Accounts"])
+async def get_all_accounts(service: AccountService = Depends(get_service)) -> list[AccountOut]:
+   """
+    Devuelve la lista de todas las cuentas de banco creadas.
+
+    ## Ejemplo de respuesta
+    ```json
+    [
+        {
+            "id": "68795f6c6651bb3bbb6719ab",
+            "name": "Juan Pérez",
+            "email": "juan@example.com",
+            "balance": 0,
+            "created_at": "2025-07-17T20:39:08.439000"
+        }
+    ]
+    """
+   
+   accounts_list = service.get_all_accounts()
+
+   return accounts_list
