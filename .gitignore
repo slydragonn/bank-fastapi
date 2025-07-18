@@ -34,6 +34,7 @@ docker-compose.override.yml
 htmlcov/
 coverage.xml
 *.cover
+.env.test
 
 # Others
 dist/

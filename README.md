@@ -61,6 +61,8 @@ cd bank-fastapi
 MONGO_URI=mongodb://admin:example@mongo:27017
 MONGO_INITDB_ROOT_USERNAME=admin
 MONGO_INITDB_ROOT_PASSWORD=example
+TESTING=0
+PYTHONPATH=.
 ```
 
 ### 3. Levanta los servicios con Docker
@@ -89,9 +91,28 @@ La API estará disponible en: [http://0.0.0.0:8000/docs](http://0.0.0.0:8000/doc
 
 ---
 
+## 🧪 Cómo correr los tests
+
+### Crea el archivo .env.test
+
+```env
+MONGO_URI=mongodb://admin:example@mongo:27017
+MONGO_INITDB_ROOT_USERNAME=admin
+MONGO_INITDB_ROOT_PASSWORD=example
+TESTING=1
+PYTHONPATH=.
+```
+
+### Ejecuta los tests
+
+```bash
+docker compose run --rm test
+```
+
 ## 🛠 Tecnologías utilizadas
 
 * [FastAPI](https://fastapi.tiangolo.com/)
 * [MongoDB](https://www.mongodb.com/)
 * [PyMongo](https://pymongo.readthedocs.io/)
 * [Docker](https://www.docker.com/)
+* [Pytest](https://docs.pytest.org/)

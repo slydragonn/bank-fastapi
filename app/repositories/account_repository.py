@@ -2,7 +2,9 @@ from pymongo.errors import PyMongoError
 from pymongo import ReturnDocument
 from app.models.account import AccountCreate, AccountOut
 from bson import ObjectId
+from bson.errors import InvalidId
 from typing import Optional
+from fastapi import HTTPException, status
 
 class AccountRepository:
   def __init__(self, db):
@@ -22,6 +24,7 @@ class AccountRepository:
             ValueError: Si los datos de la cuenta son invalidos
         """
         try:
+            
             result = self.collection.insert_one(account_dict)
             
             return AccountOut(
@@ -37,12 +40,19 @@ class AccountRepository:
         
   def _map_to_account_out(self, account_dict: dict) -> AccountOut:
         """Helper para convertir diccionario de la DB al modelo AccountOut"""
-        return AccountOut(
-            id=str(account_dict["_id"]),
-            name=account_dict["name"],
-            balance=account_dict["balance"],
-            created_at=account_dict.get("created_at")
-        )
+        try:
+            if not account_dict:
+                raise ValueError("Cuenta no encontrada")
+            
+            return AccountOut(
+                id=str(account_dict["_id"]),
+                name=account_dict["name"],
+                balance=account_dict["balance"],
+                created_at=account_dict.get("created_at")
+            )
+        except KeyError as e:
+            print(f"Error al mapear cuenta: {str(e)}")
+            raise ValueError("Datos de cuenta incompletos") from e
 
   def get_all(self) -> list[AccountOut]:
         """
@@ -71,13 +81,23 @@ class AccountRepository:
         AccountOut: Todos los detalles de la cuenta 
       """
       try:
+          if not ObjectId.is_valid(account_id):
+              raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ID de cuenta no válido")
+          
           account = self.collection.find_one({"_id": ObjectId(account_id)})
+
+          if not account:
+              raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cuenta no encontrada")
 
           return self._map_to_account_out(account)
       except PyMongoError as e:
           print(f"Error al consultar la cuenta en la base de datos: {str(e)}")
-          raise
-      
+          raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cuenta no encontrada")
+      except ValueError:
+          raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="ID de cuenta no válido")
+      except InvalidId:
+          raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ID de cuenta no válido")
+
   def update_balance(self, account_id: str, amount: float) -> Optional[AccountOut]:
       """
         Actualiza el saldo de la cuenta por un monto relativo.
