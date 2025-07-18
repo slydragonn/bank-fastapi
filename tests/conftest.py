@@ -12,7 +12,8 @@ def set_test_env():
 @pytest.fixture(autouse=True)
 def clear_accounts():
     db = get_database()
-    db["test_db"].delete_many({})
+    collection = db["accounts"]
+    collection.delete_many({})  # Clear accounts before each test
     
 
 @pytest.fixture(scope="module")
