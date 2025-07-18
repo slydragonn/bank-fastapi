@@ -1,4 +1,4 @@
-from models.account import AccountCreate, AccountOut
+from app.models.account import AccountCreate, AccountOut
 from datetime import datetime
 from fastapi import HTTPException, status
 

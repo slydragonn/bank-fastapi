@@ -1,6 +1,6 @@
 from pymongo.errors import PyMongoError
 from pymongo import ReturnDocument
-from models.account import AccountCreate, AccountOut
+from app.models.account import AccountCreate, AccountOut
 from bson import ObjectId
 from typing import Optional
 

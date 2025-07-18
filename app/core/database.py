@@ -8,8 +8,9 @@ def connect_to_mongo():
   print("Conectando a MongoDB...")
   global client, db
   MONGO_URI = os.getenv("MONGO_URI", "mongodb://mongo:27017")
+  IS_TESTING = os.getenv("TESTING", "0") == "1"
   client = MongoClient(MONGO_URI)
-  db = client["bank_accounts"]
+  db = client["test_db"] if IS_TESTING else client["bank_accounts"]
   print("Base de datos conectada")
 
 

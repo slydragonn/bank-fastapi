@@ -10,16 +10,18 @@ class AccountCreate(BaseModel):
       name: Nombre completo del titular de la cuenta (2-100 caracteres)
       balance: Saldo inicial de la cuenta (por defecto 0 si no se indica).
     """
-    name: str = Field(..., min_length=2, max_length=100, example="Juan Pérez")
+    name: str = Field(..., min_length=2, max_length=100, json_schema_extra={
+        "example": "Juan Pérez"
+    })
     balance: Optional[float] = Field(
         default=0.0,
         ge=0,
         description="Saldo inicial de la cuenta",
-        example=100.50
+        json_schema_extra={"example": 100.50}
     )
 
-    class Config:
-        schema_extra = {
+    class ConfigDict:
+        json_schema_extra = {
             "example": {
                 "name": "María García",
                 "balance": 500.75
@@ -36,7 +38,7 @@ class AccountOut(BaseModel):
       balance: Saldo actual de la cuenta
       created_at: Fecha de creación de la cuenta
     """
-    id: str = Field(..., example="507f1f77bcf86cd799439011")
+    id: str = Field(..., json_schema_extra={"example": "507f1f77bcf86cd799439011"})
     name: str
     balance: float
     created_at: datetime = Field(default_factory=datetime.now)
@@ -48,7 +50,7 @@ class AccountOutId(BaseModel):
     Attributes:
         id: Identificador único de cuenta
     """
-    id: str = Field(..., example="507f1f77bcf86cd799439011")
+    id: str = Field(..., json_schema_extra={"example": "507f1f77bcf86cd799439011"})
 
 class BalanceAdjustment(BaseModel):
     """
@@ -60,7 +62,7 @@ class BalanceAdjustment(BaseModel):
     amount: float = Field(
         ...,
         description="Monto por el que ajustar el saldo (positivo o negativo)",
-        example=-50.50
+        json_schema_extra={"example": -50.50}
     )
 
 class BalanceOut(BaseModel):

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status
-from core.database import get_database
-from models.account import AccountCreate, AccountOutId, AccountOut, BalanceAdjustment, BalanceOut
-from repositories.account_repository import AccountRepository
-from services.account_service import AccountService
+from app.core.database import get_database
+from app.models.account import AccountCreate, AccountOutId, AccountOut, BalanceAdjustment, BalanceOut
+from app.repositories.account_repository import AccountRepository
+from app.services.account_service import AccountService
 
 router = APIRouter()
 
